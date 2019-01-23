@@ -1,17 +1,25 @@
 mod ip {
     const DIGIT_AMOUNT: usize = 8;
-    pub fn convert_to_octet(number: u8) -> [u8; 8] {
-        let mut octet: [u8; 8] = [0; 8];
-        for i in 0..DIGIT_AMOUNT {
-            octet[i] = (number >> i) & 1;
+
+    pub struct Address;
+
+    pub trait IP {
+        fn convert_to_octet(number: u8) -> [u8; 8] {
+            let mut octet: [u8; 8] = [0; 8];
+            for i in 0..DIGIT_AMOUNT {
+                octet[i] = (number >> i) & 1;
+            }
+            octet
         }
-        octet
     }
+
+    impl IP for Address {}
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use super::ip::IP;
     
     #[test]
     fn test_convert_to_octet_1() {
@@ -19,7 +27,7 @@ mod tests {
         let expected_number: u8 = 1;
         let expected_octet: [u8; 8] = [1, 0, 0, 0, 0, 0, 0, 0];
         // Act
-        let actual_octet = ip::convert_to_octet(expected_number);
+        let actual_octet: [u8; 8] = ip::Address::convert_to_octet(expected_number);
         // Assert
         assert_eq!(actual_octet, expected_octet);
     }
@@ -30,7 +38,7 @@ mod tests {
         let expected_number: u8 = 193;
         let expected_octet: [u8; 8] = [1, 0, 0, 0, 0, 0, 1, 1];
         // Act
-        let actual_octet = ip::convert_to_octet(expected_number);
+        let actual_octet: [u8; 8] = ip::Address::convert_to_octet(expected_number);
         // Assert
         assert_eq!(actual_octet, expected_octet);
     }
